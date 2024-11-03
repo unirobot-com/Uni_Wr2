@@ -1,0 +1,2 @@
+navi:rviz_show:slam
+-DCATKIN_DEVEL_PREFIX=/home/unirobot/uni_robot/devel -DCMAKE_INSTALL_PREFIX=/home/unirobot/uni_robot/install -G Unix Makefiles

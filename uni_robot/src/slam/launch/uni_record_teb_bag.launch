@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="rosbag" type="record" name="record_2d_bag"
+        args="-q /cmd_vel /scan_filtered /tf -O /home/unirobot/uni_robot/src/slam/bag/cartographer_teb_bag/data.bag" >
+    </node>
+</launch>

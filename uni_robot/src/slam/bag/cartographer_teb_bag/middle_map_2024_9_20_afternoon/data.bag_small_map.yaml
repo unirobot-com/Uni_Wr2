@@ -1,0 +1,6 @@
+image: /home/unirobot/uni_robot/src/slam/bag/cartographer_teb_bag/data.bag_small_map.pgm
+resolution: 0.01
+origin: [-0.36, -0.82, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

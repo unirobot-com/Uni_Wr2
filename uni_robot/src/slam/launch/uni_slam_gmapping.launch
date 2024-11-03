@@ -1,0 +1,62 @@
+
+
+<launch>
+  <arg name="scan_topic"  default="/scan_filtered" /> <!-- laser的topic名称，与自己的激光的topic相对应 -->
+  <arg name="base_frame"  default="base_link"/>      <!-- 机器人的坐标系 -->
+  <arg name="odom_frame"  default="odom"/>           <!-- 世界坐标 -->
+  <arg name="map_frame"   default="map" />
+  
+ 
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen"> <!-- 启动slam的节点 -->
+    <param name="base_frame" value="$(arg base_frame)"/>
+    <param name="odom_frame" value="$(arg odom_frame)"/>
+    <param name="map_update_interval" value="0.5"/>   <!-- default:5.0 --> <!--地图更新的一个间隔，地图更新速度，0.5s-->
+    <param name="maxUrange" value="2.0"/>   <!--用于建图的最大可用扫描距离-->
+    <param name="maxRange" value="3.0"/>    <!--雷达扫描的最大有效距离,超过这个数值的扫描会忽略-->
+
+    <param name="sigma" value="0.05"/>      <!--endpoint匹配标准差,计算score时的方差-->
+    <param name="kernelSize" value="1"/>    <!-- default:1 -->  <!--用于查找对应的kernel size, 主要用在计算score时搜索框的大小-->
+    <param name="lstep" value="0.05"/>      <!--平移优化步长-->
+    <param name="astep" value="0.05"/>      <!--旋转优化步长-->
+    <param name="iterations" value="5"/>    <!-- icp的迭代次数 -->
+    <!-- 用于扫描匹配概率的激光标准差 -->
+    <param name="lsigma" value="0.075"/>
+    <!--似然估计为平滑重采样影响使用的gain. 对应函数normalize()中的m_obsSigmaGain，用于粒子权重归一化-->
+    <param name="ogain" value="3.0"/>
+    <!--计算似然时，跳过的激光束。0表示所有的激光都处理，如果计算压力过大，可以改成1-->
+    <param name="lskip" value="0"/>
+    <!-- 每进行这么多次扫描，处理1次（将其设置为更高的数字以跳过更多扫描 -->
+    <param name="throttle_scans" value="1" /> <!-- default:1 -->
+    <!--很重要，判断scanmatch是否成功的阈值，过高的话会使scanmatch失败，从而影响地图更新速率-->
+    <!-- <param name="minimumScore" value="160"/> -->
+    <param name="minimumScore" value="50"/>
+    
+    <!-- 以下四个参数是运动模型的噪声参数 -->
+    <param name="srr" value="0.05"/>  <!--线性运动造成的线性误差的方差-->
+    <param name="srt" value="0.05"/>  <!--线性运动造成的角度误差的方差-->
+    <param name="str" value="0.05"/>  <!--旋转运动造成的线性误差的方差-->
+    <param name="stt" value="0.05"/>  <!--旋转运动造成的角度误差的方差-->
+
+    <param name="linearUpdate" value="0.05"/>    <!--机器人移动距离,处理雷达数据 default:1-->
+    <param name="angularUpdate" value="0.15"/>   <!--机器人转动角度,处理雷达数据 default:0.5-->
+    <param name="temporalUpdate" value="-1.0"/>  <!--两次雷达scan数据之前的等待时间-->
+    <param name="resampleThreshold" value="0.5"/>
+    <param name="particles" value="50"/>          <!-- 很重要，粒子个数 -->
+  
+    <!-- 地图初始大小 -->
+    <param name="xmin" value="-2.0"/> <!--minimum x position in the map [m]-->
+    <param name="ymin" value="-2.0"/> <!--minimum y position in the map [m]-->
+    <param name="xmax" value="2.0"/>  <!--maximum x position in the map [m]-->
+    <param name="ymax" value="2.0"/>  <!--maximum y position in the map [m]-->
+ 
+    <!--  map resolution -->
+    <param name="delta" value="0.01"/>          <!--地图分辨率-->
+    <param name="llsamplerange" value="0.01"/>  <!--用于似然计算的平移采样距离-->
+    <param name="llsamplestep" value="0.01"/>   <!--用于似然计算的平移采样步长-->
+    <param name="lasamplerange" value="0.005"/> <!--用于似然计算的角度采样距离-->
+    <param name="lasamplestep" value="0.005"/>  <!--用于似然计算的角度采样步长-->
+    <remap from="scan" to="$(arg scan_topic)"/>
+  </node>
+  <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find rviz_show)/rviz/uni_car_slam_gmapping.rviz"/>
+</launch>

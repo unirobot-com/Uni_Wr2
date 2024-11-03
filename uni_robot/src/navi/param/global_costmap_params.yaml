@@ -1,0 +1,41 @@
+# global_costmap:
+#   global_frame: map
+#   robot_base_frame: base_link
+
+#   update_frequency: 3.0
+#   publish_frequency: 3.0
+#   transform_tolerance: 0.5
+
+#   # static_map: true
+#   width: 2.0
+#   height: 2.0
+#   resolution: 0.01
+
+#   # obstacle_layer:
+#   #   observation_sources: scan
+#   #   scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+
+#   # inflation_layer:
+#   #   inflation_radius: 0.01
+#   #   cost_scaling_factor: 1.0
+
+
+
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_link #base_footprint
+
+  update_frequency:  1.0   #5.0 #10.0
+  publish_frequency: 0.5   #5.0 #10.0
+  transform_tolerance: 0.6 #0.5
+  resolution: 0.004
+  static_map: true
+
+  footprint: [[-0.023, -0.049], [-0.023, 0.049], [0.109, 0.049], [0.109, -0.049]]
+ 
+  inflation_layer:
+    inflation_radius: 0.05 # 你可以在这里设置膨胀半径
+
+  map_type: costmap
+  observation_sources: scan
+  scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}

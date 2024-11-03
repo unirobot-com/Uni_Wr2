@@ -1,0 +1,25 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_link
+
+  update_frequency:  5.0 #10.0
+  publish_frequency: 3.0 #10.0
+  transform_tolerance: 1.0
+
+  width: 10.0  # 设置全局地图的宽度，确保地图覆盖足够大的区域
+  height: 10.0  # 设置全局地图的高度
+  resolution: 0.01  # 地图的分辨率，保持较高的精度
+
+  static_map: true
+  rolling_window: false
+
+  #footprint: [ [-0.023, -0.051], [-0.023, 0.051], [0.109, 0.051], [0.109, -0.051] ]
+
+  map_type: costmap
+  observation_sources: scan
+  scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+
+  inflation_layer: #膨胀层，在以上两层地图进行膨胀，以避免机器人的撞上障碍物，用于路径规划。
+    enabled:              true
+    cost_scaling_factor:  10.0  # exponential rate at which the obstacle cost drops off (default: 10)
+    inflation_radius:     0.15  # max. distance from an obstacle at which costs are incurred for planning paths.

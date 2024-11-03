@@ -1,0 +1,35 @@
+  
+local_costmap:  
+  global_frame: odom
+  robot_base_frame: base_link  #base_footprint
+
+  update_frequency: 5.0 #15.0
+  publish_frequency: 3.0 #15.0
+  transform_tolerance: 0.5 #0.08 #0.2
+
+  static_map: false  
+  rolling_window: true
+  width: 1.8 #5.0
+  height: 1.8 #5.0
+  resolution: 0.01
+
+
+  map_type: costmap
+  observation_sources: scan
+  scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+
+  # obstacle_layer:     #障碍地图层，用于动态的记录传感器感知的障碍物信息，用于路径规划和避障。
+  #   enabled: true
+  #   max_obstacle_height: 0.75        #add new 感器读数的最大有效高度（单位：m）。 通常设置为略高于机器人的高度。 此参数设置为大于全局max_obstacle_height参数的值将会失效。
+  #   min_obstacle_height:  0.0       #add new
+  #   obstacle_range: 2.0 #2.5     #检测2米以内的障碍 source data:3.0
+  #   raytrace_range: 2.5 #3.0     #清除3米以外的数据 source data:3.5
+  #   track_unknown_space: true 
+  #   combination_method: 1   #只能设置为0或1，用来更新地图上的代价值，一般设置为1;
+
+  inflation_layer: #膨胀层，在以上两层地图进行膨胀，以避免机器人的撞上障碍物，用于路径规划。
+    enabled:              true
+    cost_scaling_factor:  10.0  # exponential rate at which the obstacle cost drops off (default: 10)
+    inflation_radius:     0.03  # max. distance from an obstacle at which costs are incurred for planning paths.
+  ################################################################################################################
+

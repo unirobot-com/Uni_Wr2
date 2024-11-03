@@ -1,0 +1,17 @@
+footprint: [ [-0.023, -0.051], [-0.023, 0.051], [0.109, 0.051], [0.109, -0.051] ]
+# footprint_padding: 0.00
+
+
+update_frequency: 5.0  # 确保更新频率足够高，例如5Hz或更高
+publish_frequency: 2.0  # 发布costmap的频率，建议设置高于1Hz
+
+
+transform_tolerance: 0.4  #可以忍受的最大延时
+map_type: costmap
+
+always_send_full_costmap: true  #用于设置是否在每次更新时发送完整的成本地图，而不是对成本地图进行更新。
+
+static_layer:                 #static_layer :静态地图层，基本不变的地图层，通常都是SLAM建图完成的静态地图，用于路径规划
+  enabled:              true
+  map_topic:            "/map"
+

@@ -1,0 +1,39 @@
+<launch>
+
+    <arg name="base_frame" default="base_link"/>
+    <arg name="global_frame_id" default="map" />
+    <arg name="odom_frame" default="odom"/>
+    <arg name="map_frame"  default="map"/>
+
+    <!-- Map server -->
+    <arg name="map_file" default="/home/unirobot/uni_robot/src/slam/bag/cartographer_teb_bag/data.bag_small_map.yaml"></arg>
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <node pkg="navi" name="pub_map_odom" type="pub_map_odom.py" output="screen" />
+
+    <!-- <include file="$(find cartographer_ros)/launch/uni_carto_localization.launch"/> -->
+    <include file="$(find cartographer_ros)/launch/uni_carto_teb_localization.launch"/>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <param name="global_costmap/global_frame" value="$(arg map_frame)" />
+        <param name="global_costmap/robot_base_frame" value="$(arg base_frame)" />
+        <rosparam file="$(find navi)/config/teblocal/common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find navi)/config/teblocal/global_params.yaml" command="load" />
+
+        <param name="local_costmap/global_frame" value="$(arg map_frame)" />
+        <param name="local_costmap/robot_base_frame" value="$(arg base_frame)" />
+        <rosparam file="$(find navi)/config/teblocal/common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find navi)/config/teblocal/local_params.yaml" command="load" />
+        
+        <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+        <param name="planner_frequency" value="1.0" />
+        <param name="planner_patience" value="5.0" />
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+        <param name="controller_frequency" value="1.2" />
+        <param name="controller_patience" value="10.0" />
+
+        <rosparam file="$(find navi)/config/teblocal/planner_params.yaml" command="load" />
+        <rosparam file="$(find navi)/config/teblocal/teblocal_params.yaml" command="load" />
+    </node>
+
+</launch>

@@ -1,0 +1,71 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="scan_id_name"         default="/scan_filtered"/>
+  <arg name="base_frame_id_name"   default="base_link"/>
+  <arg name="odom_frame_id_name"   default="odom"/>
+  <arg name="global_frame_id_name" default="map"/>
+  <arg name="initial_pose_x"       default="0.001"/>
+  <arg name="initial_pose_y"       default="0.001"/>
+  <arg name="initial_pose_a"       default="0.0"/>
+
+  <!-- AMCL -->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <param name="odom_frame_id"             value="$(arg odom_frame_id_name)"/>
+    <param name="base_frame_id"             value="$(arg base_frame_id_name)"/>
+    <param name="global_frame_id"           value="$(arg global_frame_id_name)"/>
+    <param name="use_map_topic"             value="true"/>  <!--设置为true时，AMCL将订阅地图主题，而不是进行服务调用来接收其地图-->
+    <param name="first_map_only"            value="true"/>  <!--设置为true时，AMCL将仅使用它订阅的第一个地图，而不是在每次收到新地图时进行更新-->
+
+    <!-- 粒子滤波参数 -->
+    <param name="min_particles"             value="1000"/>  <!--滤波器中的最少粒子数,值越大定位效果越好,但是相应的会增加主控平台的计算资源消耗-->
+    <param name="max_particles"             value="2000"/>  <!--滤波器中最多粒子数，是一个上限值，因为太多的粒子数会导致系统资源消耗过多-->
+    <param name="kld_err"                   value="0.01"/>  <!--真实概率分布与估计概率分布间的误差, default: 0.01-->
+
+    <!-- 更新速率 -->
+    <param name="update_min_d"              value="0.05"/>  <!--向前运动0.05米,就更新粒子-->
+    <param name="update_min_a"              value="0.2"/>   <!--转动0.2弧度,就更新粒子-->
+
+    <!-- 重采样控制，确保在定位时粒子数稳定 -->
+    <param name="resample_interval"         value="1"/>     <!--对粒子样本重采样间隔-->
+    <param name="transform_tolerance"       value="0.1"/>   <!--用于坐标变换的时间容差-->
+    <param name="recovery_alpha_slow"       value="0.00"/>  <!--慢速平均权重过滤器的指数衰减率，用于决定何时通过添加随机姿势进行恢复, default: 0.0（禁用)-->
+    <param name="recovery_alpha_fast"       value="0.00"/>  <!--快速平均权重过滤器的指数衰减率，用于决定何时通过添加随机姿势进行恢复, default: 0.0（禁用)-->
+    <param name="initial_pose_x"            value="$(arg initial_pose_x)"/> <!--初始姿态均值（x），用于初始化具有高斯分布的过滤器-->
+    <param name="initial_pose_y"            value="$(arg initial_pose_y)"/> <!--初始姿态均值（y），用于初始化具有高斯分布的过滤器-->
+    <param name="initial_pose_a"            value="$(arg initial_pose_a)"/> <!--初始姿态均值（偏航角），用于初始化高斯分布的滤波器-->
+    <!--param name="initial_pose_cov_xx"       value="0.5" /-->  <!--初始姿态协方差（x*x），用于初始化高斯分布的滤波器-->
+    <!--param name="initial_pose_cov_yy"       value="0.5" /-->  <!--初始姿态协方差（y*y），用于用高斯分布初始化滤波器-->
+    <!--param name="initial_pose_cov_aa"       value="0.1" /-->  <!--初始姿态协方差（yaw*yaw），用于初始化具有高斯分布的过滤器-->
+    <param name="gui_publish_rate"          value="50.0"/>  <!--扫描和路径发布到可视化软件的最大频率,default: -1.0hz-->
+    <param name="laser_max_range"           value="2.5"/>   <!--最大扫描范围,参数设置为-1.0时,将会使用激光上报的最大扫描范围-->
+    <param name="laser_min_range"           value="0.05" /> <!--要考虑的最小扫描范围；-1.0 将导致使用激光报告的最小范围-->
+    <remap from="scan"                      to="$(arg scan_id_name)"/>
+
+    <!-- 激光雷达的匹配参数 -->
+    <param name="laser_max_beams"           value="180"/>   <!--更新滤波器时，每次扫描中多少个等间距的光束被使用-->
+    <param name="laser_z_hit"               value="0.95"/>  <!--模型 z_hit 部分的混合权重. default: 0.95-->
+    <param name="laser_z_short"             value="0.1"/>   <!--模型 z_short 部分的混合权重. default: 0.1-->
+    <param name="laser_z_max"               value="0.05"/>  <!--模型 z_max 部分的混合权重. default: 0.05-->
+    <param name="laser_z_rand"              value="0.05"/>  <!--模型的 z_rand 部分的混合权重. default: 0.05-->
+    <param name="laser_sigma_hit"           value="0.2"/>   <!--模型的 z_hit 部分中使用的高斯模型的标准差. default: 0.2-->
+    <param name="laser_lambda_short"        value="0.1"/>   <!--模型 z_short 部分的指数衰减参数. default: 0.1-->
+    <param name="laser_likelihood_max_dist" value="0.1"/>   <!--在地图上进行障碍物膨胀的最大距离. default:2.0-->
+    <!-- .......................................................................................................
+        likelihood_field：基于场地地图的激光雷达模型，考虑了地图中障碍物的分布，适用于静态环境下的定位。
+        likelihood_field_prob：类似于likelihood_field模型，但使用了概率形式的计算，适用于概率地图的定位。
+        beam：基于激光束的模型，假设激光束是直线，适用于较简单的环境。
+        likelihood_field_range：基于场地地图的激光雷达模型，考虑了地图中障碍物的分布和激光束的范围，适用于考虑激光束范围的定位。
+        likelihood_field 模型仅使用 2 个权重：z_hit 和 z_rand
+        beam 模型使用全部 4 个权重：z_hit、z_short、z_max 和 z_rand
+    ..........................................................................................................-->
+    <!-- <param name="laser_model_type"          value="likelihood_field_prob"/> -->
+    <param name="laser_model_type"          value="likelihood_field"/>
+    
+    <!-- 里程计噪声模型，适当增加噪声以处理里程误差 -->
+    <param name="odom_model_type"           value="diff"/>
+    <param name="odom_alpha1"               value="0.4"/>  <!--根据机器人运动的旋转分量指定里程计旋转估计中的预期噪声-->
+    <param name="odom_alpha2"               value="0.4"/>  <!--根据机器人运动的平移分量指定里程计旋转估计中的预期噪声-->
+    <param name="odom_alpha3"               value="0.2"/>  <!--根据机器人运动的平移分量指定里程计平移估计中的预期噪声-->
+    <param name="odom_alpha4"               value="0.2"/>  <!--根据机器人运动的旋转分量指定里程计平移估计中的预期噪声-->
+  </node>
+</launch>

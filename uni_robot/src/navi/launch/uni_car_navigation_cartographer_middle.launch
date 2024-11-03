@@ -1,0 +1,21 @@
+<launch>
+    <arg name="map_frame"  default="map"/>
+    <arg name="move_forward_only" default="false"/>
+
+    <!-- <arg name="map_file" default="/home/unirobot/uni_robot/src/slam/bag/data.bag_map.yaml"></arg> -->
+    <arg name="map_file" default="/home/unirobot/uni_robot/src/slam/bag/cartographer_teb_bag/middle/data.bag_small_map.yaml"></arg>
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <!-- <node name="pub_map_odom" pkg="navi" type="pub_map_odom.py" /> -->
+    <node pkg="navi" name="pub_map_odom" type="pub_map_odom.py" output="screen" />
+
+
+    <!-- <include file="$(find cartographer_ros)/launch/uni_carto_localization.launch"/> -->
+    <include file="$(find cartographer_ros)/launch/uni_carto_teb_localization.launch"/>
+
+
+    <include file="$(find navi)/launch/move_base.launch">
+        <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    </include>
+
+</launch>

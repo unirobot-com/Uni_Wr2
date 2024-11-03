@@ -1,0 +1,8 @@
+<launch>
+    <!-- handle lidar slam test -->
+    <include file="$(find cartographer_ros)/launch/my_demo_revo_lds.launch" />
+
+    <!-- load rviz -->
+    <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find rviz_show)/rviz/handle_2dlidar_gmapping.rviz" />
+</launch>

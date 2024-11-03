@@ -1,0 +1,44 @@
+# global_costmap:
+#   global_frame: map
+#   robot_base_frame: base_link #base_footprint
+
+#   update_frequency:  2.0 #10.0
+#   publish_frequency: 0.5 #10.0
+#   transform_tolerance: 1.2 #0.5
+
+#   static_map: true
+#   rolling_window: false
+  
+#   footprint: [ [-0.023, -0.051], [-0.023, 0.051], [0.109, 0.051], [0.109, -0.051] ] #[ [-0.075, -0.038], [-0.075, 0.038], [0.001, 0.038], [0.001, -0.038] ] #[[-0.109, -0.051], [-0.109, 0.051], [0.023, 0.051], [0.023, -0.051]]
+ 
+#   inflation_layer:
+#     inflation_radius: 0.03 # 你可以在这里设置膨胀半径
+
+#   map_type: costmap
+#   observation_sources: scan
+#   scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+
+
+
+# global_costmap:
+#   global_frame: map
+#   robot_base_frame: base_link
+#   update_frequency: 2.0
+#   publish_frequency: 0.5
+#   static_map: false
+
+
+
+global_costmap:
+  global_frame: "map"
+  robot_base_frame: "base_link"
+  update_frequency: 5.0
+  publish_frequency: 2.0
+  static_map: true #false  # 如果设置为true，表示全局地图不会更新
+  rolling_window: true
+  width: 4.0
+  height: 4.0
+  resolution: 0.02
+  plugins:
+    - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}

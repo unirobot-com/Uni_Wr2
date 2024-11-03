@@ -1,0 +1,6 @@
+image: /home/unirobot/uni_robot/src/slam/bag/data.bag_small_map.pgm
+resolution: 0.01
+origin: [-0.18, -0.33, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

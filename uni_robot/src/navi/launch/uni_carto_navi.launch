@@ -1,0 +1,37 @@
+<launch>
+
+    <arg name="base_frame" default="base_link"/>
+    <arg name="odom_frame" default="map"/>
+    <arg name="map_frame"  default="map"/>
+
+    <arg name="map_file" default="/home/unirobot/uni_robot/src/slam/bag/data.bag_map.yaml"></arg>
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <include file="$(find cartographer_ros)/launch/uni_carto_localization.launch"/>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <param name="global_costmap/global_frame" value="$(arg map_frame)" />
+        <param name="global_costmap/robot_base_frame" value="$(arg base_frame)" />
+        <rosparam file="$(find navi)/config/carto/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find navi)/config/carto/global_costmap_params.yaml" command="load" />
+
+        <param name="local_costmap/global_frame" value="$(arg map_frame)" />
+        <param name="local_costmap/robot_base_frame" value="$(arg base_frame)" />
+        <rosparam file="$(find navi)/config/carto/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find navi)/config/carto/local_costmap_params.yaml" command="load" />
+        
+        <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+        <param name="planner_frequency" value="0.0" />
+        <param name="planner_patience" value="5.0" />
+        <!-- <param name="planner_patience" value="0.5" /> -->
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+        <param name="controller_frequency" value="5.0" />
+        <param name="controller_patience" value="10.0" />
+        <!-- <param name="controller_frequency" value="0.5" />
+        <param name="controller_patience" value="1.0" /> -->
+        <rosparam file="$(find navi)/config/carto/global_planner_params.yaml" command="load" />
+        <rosparam file="$(find navi)/config/carto/teb_local_planner_params.yaml" command="load" />
+    </node>
+</launch>
+
+

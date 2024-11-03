@@ -1,0 +1,86 @@
+<!--
+  notice : you should install gmapping-slam at first, command 'sudo apt-get install ros-melodic-gmapping'and 'sudo apt-get install ros-indigo-slam-gmapping'.
+           this launch just for test, you should improve the param for the best result.
+  you nedd change the frame of the "static_transform_publisher" when using the real robot platform.
+  it is better  subscribe the topic /odom with true to slam in gmapping
+E-mail: kint.zhao@slamtec.com
+ -->
+<launch>
+    <!--laser的topic名称，与自己的激光的topic相对应 -->
+    <arg name="scan_topic" default="scan"/>
+    <arg name="base_frame" default="laser"/>
+	<arg name="temporalUpdate" default="-1.0"/>
+    <arg name="odom_frame" value="odom"/>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" respawn="true">
+        <remap from="scan" to="$(arg scan_topic)"/>
+        <!-- 机器人基坐标系-->
+        <param name="base_frame" value="$(arg base_frame)"/>
+        <!-- 里程计坐标系-->
+        <param name="odom_frame" value="$(arg odom_frame)"/>
+        <!-- 地图坐标系-->
+        <param name="map_frame" value="map"/>
+        <!-- 地图更新频率，该值越低，计算负载越大-->
+        <param name="map_update_interval" value="5.0"/>
+        <!-- 激光可探测的最大范围-->
+        <param name="maxUrange" value="8.0"/>
+        <!-- 传感器的最大范围。-->
+        <param name="maxRange" value="12.0"/>
+        <!-- 端点匹配的标准差-->
+        <param name="sigma" value="0.05"/>
+        <!-- 在对应的内核中进行查找-->
+        <param name="kernelSize" value="1"/>
+        <!-- 平移过程中的优化步长-->
+        <param name="lstep" value="0.05"/>
+        <!-- 旋转过程中的优化步长-->
+        <param name="astep" value="0.05"/>
+        <!-- 扫描匹配的迭代次数-->
+        <param name="iterations" value="5"/>
+        <!-- 似然计算的激光标准差-->
+        <param name="lsigma" value="0.075"/>
+        <!-- 似然计算时用于平滑重采样效果-->
+        <param name="ogain" value="3.0"/>
+        <!-- 每次扫描跳过的光束数;尽可能为0表示所有的激光都处理，如果计算压力过大，可以改成1-->
+        <param name="lskip" value="0"/>
+        <!-- 最小匹配得分，这个参数很重要，它决定了对激光的一个置信度，
+         越高说明对激光匹配算法的要求越高，激光的匹配也越容易失败而转去使用里程计数据，
+         而设的太低又会使地图中出现大量噪声，所以需要权衡调整。-->
+        <param name="minimumScore" value="50"/>
+        <!-- 平移函数（rho/rho），平移时的里程计误差-->
+        <param name="srr" value="0.001"/>
+        <!-- 旋转函数（rho/theta），平移时的里程计误差-->
+        <param name="srt" value="0.002"/>
+        <!-- 平移函数（theta/rho），旋转时的里程计误差-->
+        <param name="str" value="0.001"/>
+        <!-- 旋转函数（theta/theta），旋转时的里程计误差-->
+        <param name="stt" value="0.002"/>
+        <!-- 机器人每平移该距离后处理一次激光扫描数据-->
+        <param name="linearUpdate" value="0.5"/>
+        <!-- 机器人每旋转该距离后处理一次激光扫描数据-->
+        <param name="angularUpdate" value="0.436"/>
+        <!-- 如果最新扫描处理的速度比更新的速度慢，则处理一次扫描。该值为负数时关闭基于时间的更新-->
+        <param name="temporalUpdate" value="$(arg temporalUpdate)"/>
+        <!-- 基于Neff的重采样阈值-->
+        <param name="resampleThreshold" value="0.5"/>
+        <!-- 滤波器的粒子数目-->
+        <param name="particles" value="30"/>
+        <!-- 地图x向初始最小尺寸-->
+        <param name="xmin" value="-10.0"/>
+        <!-- 地图y向初始最小尺寸-->
+        <param name="ymin" value="-10.0"/>
+        <!-- 地图x向初始最大尺寸-->
+        <param name="xmax" value="10.0"/>
+        <!-- 地图y向初始最大尺寸-->
+        <param name="ymax" value="10.0"/>
+        <!-- 地图分辨率-->
+        <param name="delta" value="0.05"/>
+        <!-- 似然计算的平移采样距离-->
+        <param name="llsamplerange" value="0.01"/>
+        <!-- 似然计算的平移采样步长-->
+        <param name="llsamplestep" value="0.01"/>
+        <!-- 似然计算的旋转采样距离-->
+        <param name="lasamplerange" value="0.005"/>
+        <!-- 似然计算的旋转采样步长-->
+        <param name="lasamplestep" value="0.005"/>
+    </node>
+</launch>
+

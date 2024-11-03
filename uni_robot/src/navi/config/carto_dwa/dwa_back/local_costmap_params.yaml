@@ -1,0 +1,21 @@
+local_costmap:
+  global_frame: odom
+  robot_base_frame: base_link  #base_footprint
+
+  update_frequency: 10.0 #15.0
+  publish_frequency: 10.0 #15.0
+  transform_tolerance: 0.2
+
+  static_map: false  
+  rolling_window: true
+  width: 5.0
+  height: 5.0
+  resolution: 0.05
+
+  inflation_layer:
+    inflation_radius: 0.4 # 你可以在这里设置膨胀半径
+
+  map_type: costmap
+  observation_sources: scan
+  scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+

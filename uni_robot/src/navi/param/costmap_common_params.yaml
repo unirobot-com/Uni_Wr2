@@ -1,0 +1,26 @@
+# obstacle_range: 2.0
+# raytrace_range: 2.5
+
+# footprint: [[-0.023, -0.049], [-0.023, 0.049], [0.109, 0.049], [0.109, -0.049]]
+
+# inflation_radius: 0.01
+# cost_scaling_factor: 1.0
+
+# map_type: costmap
+# observation_sources: scan
+# scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+
+
+
+obstacle_range: 5.1
+raytrace_range: 5.5
+
+footprint: [[-0.023, -0.049], [-0.023, 0.049], [0.109, 0.049], [0.109, -0.049]]
+
+cost_scaling_factor: 10.0
+transform_tolerance: 0.6
+
+map_type: costmap
+observation_sources: scan
+scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+

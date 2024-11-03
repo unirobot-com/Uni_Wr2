@@ -1,0 +1,44 @@
+# shutdown_costmaps: false
+# controller_frequency: 10.0        #控制器的更新频率，即控制器执行动作的频率，单位为赫兹（Hz）。
+# planner_patience: 5.0             #规划器的超时时间，即规划器在规划路径时的最大允许时间，超过该时间将停止规划。
+# controller_patience: 15.0         #控制器的超时时间，即控制器执行动作的最大允许时间，超过该时间将停止执行动作。
+# conservative_reset_dist: 0.1 #3.0 #这个参数通常用于指定机器人在执行局部规划时，如果机器人偏离路径超过一定距离，
+#                                   #是否应该重新设置全局规划。一般来说，这个参数可以帮助机器人在遇到较大偏离时及
+#                                   #时重新规划路径，以避免偏离过大导致无法恢复到原始路径
+# # planner_frequency: 5.0
+# oscillation_timeout: 10.0         #荡检测的超时时间，用于检测机器人是否在振荡状态的时间阈值。
+# oscillation_distance: 0.05        #振荡检测的距离阈值，用于检测机器人是否在振荡状态的距离阈值。
+# recovery_behavior_enabled: true   #是否启用恢复行为，即是否启用机器人在遇到困难时的恢复行为。
+# clearing_rotation_allowed: true   #是否允许清除旋转，即在规划路径时是否允许机器人进行旋转来清除障碍物。
+
+
+
+
+shutdown_costmaps: false
+controller_frequency: 2.0 #1.0
+controller_patience: 3.0   #在空间清理操作执行前,控制器花多长时间等有效控制下发
+
+planner_patience: 5.0
+planner_patience: 5.0      #在空间清理操作执行前,留给规划器多长时间来找出一条有效规划.
+
+controller_patience: 15.0
+conservative_reset_dist: 0.1
+planner_frequency: 5.0 #1.0
+oscillation_timeout: 10.0
+oscillation_distance: 0.05 #0.2  #来回运动在多大距离以上不会被认为是振荡.
+
+
+# base_global_planner: "global_planner/GlobalPlanner"
+# base_local_planner: "dwa_local_planner/DWAPlannerROS"
+# max_planning_retries: 1
+
+rotate_recovery:
+  max_rotational_vel: 0.1  # 默认可能是1.0或更高，降低为0.5弧度/秒
+  acc_lim_th: 0.1
+
+recovery_behavior_enabled: true  #是否启动恢复机制
+clearing_rotation_allowed: false  #是否启动旋转的恢复，必须是recovery_behavior_enabled在使能的基础上才能生效
+
+recovery_behaviors:
+  - name: 'conservative_recovery'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'

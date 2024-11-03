@@ -1,0 +1,13 @@
+footprint: [ [-0.122, -0.057], [-0.127, 0.057], [0.027, 0.057], [0.027, -0.057] ]
+
+# footprint_padding: 0.00
+
+transform_tolerance: 0.8  #可以忍受的最大延时
+map_type: costmap
+
+always_send_full_costmap: true  #用于设置是否在每次更新时发送完整的成本地图，而不是对成本地图进行更新。
+
+static_layer:                 #static_layer :静态地图层，基本不变的地图层，通常都是SLAM建图完成的静态地图，用于路径规划
+  enabled:              true
+  map_topic:            "/map"
+

@@ -1,0 +1,146 @@
+TebLocalPlannerROS:
+
+#  odom_topic: odom
+ # Trajectory
+  
+ teb_autosize: True
+ dt_ref: 0.3 #0.3          #轨迹的所需时间分辨率
+ dt_hysteresis: 0.1   #根据当前的时间分辨率自动调整大小的迟滞，通常约为。建议使用10% 的dt_ref
+ global_plan_overwrite_orientation: True #覆盖全局规划器提供的局部子目标的方向
+ allow_init_with_backwards_motion: True #如果为真，则底层轨迹可能会用向后运动初始化，以防目标在本地代价地图中落后于起点
+ max_global_plan_lookahead_dist: 5 #5  #指定考虑优化的全局计划子集的最大长度（累积欧氏距离）。实际长度则由局部成本图大小和
+                                      #这个最大界限的逻辑结合决定。设置为零或负数以取消激活此限制。
+ force_reinit_new_goal_dist: 1.0  #如果先前的目标更新间隔超过指定米数，则重新初始化轨迹（跳过热启动）
+ force_reinit_new_goal_angular: 0.78
+ global_plan_viapoint_sep: -0.1   #如果为正，则从全局计划中提取过孔点（路径跟踪模式）。该值决定了参考路径的分辨率（全局计划中
+                                #每两个连续的过孔点之间的最小间隔，如果为负值：禁用）。调整强度参考参数weight_viapoint。
+ 
+ exact_arc_length: False  #如果为真，则规划器在速度、加速度和转弯率计算中使用精确的弧长（-> 增加的 cpu 时间），
+                          #否则使用欧几里得近似值。
+ feasibility_check_no_poses: 5  #指定每个采样间隔应检查预测计划的哪个姿势的可行性。
+ publish_feedback: true #发布包含完整轨迹和活动障碍列表的规划器反馈（应仅在评估或调试时启用）
+ #shrink_horizon_backup: true  #允许规划器在自动检测到问题（例如不可行性）的情况下暂时缩小范围（50%）。另请参阅参数shrink_horizo​​n_min_duration。
+
+
+
+ # Robot
+ max_vel_x:           0.08 #0.35  #0.1  #机器人的最大平移速度（米/秒）
+ max_vel_x_backwards: 0.08 #0.35  #0.1  #机器人向后行驶时的最大绝对平移速度（以米/秒为单位）。请参阅优化参数weight_kinematics_forward_drive
+ max_vel_theta:       0.25 #0.35  #0.45 #0.25 #机器人的最大角速度（弧度/秒）
+ acc_lim_x:           0.22  #0.15 #机器人的最大平移加速度（单位：米/秒^2）
+ acc_lim_theta:       0.22  #0.15 ##机器人的最大角加速度（单位为弧度/秒^2）
+ #acc_lim_y: 0.25
+ #max_vel_y: 0.2
+
+
+# ********以下参数仅与类车机器人相关 ********************
+ min_turning_radius: 0.0 #类似汽车的机器人的最小转弯半径（对于差速驱动机器人，设置为零）。
+#  wheelbase: 0.43   #后轴与前轴之间的距离。对于后轮机器人，该值可能为负（仅当~<name>/cmd_angle_instead_rotvel设置为true时才需要）。
+ cmd_angle_instead_rotvel: False #用相应的转向角 [-pi/2,pi/2] 替换指令速度消息中的旋转速度。请注意，
+ #根据应用更改偏航率的语义并不可取。在这里，它只是符合阶段模拟器所需的输入。ackermann_msgs 中的数据类型更合适，
+ #但不受 move_base 支持。本地规划器不打算自行发送命令。
+ # ********************************************************************
+
+#机器人模型表示 以下参数与用于优化的足迹模型相关
+ footprint_model:
+   type: "polygon"
+   vertices: [ [-0.122, -0.057], [-0.127, 0.057], [0.027, 0.057], [0.027, -0.057] ]
+
+
+ # GoalTolerance
+ xy_goal_tolerance:  0.05 #0.15 #0.45      #到目标位置的最终欧式距离（以米为单位）
+ yaw_goal_tolerance: 0.18 #0.35     #以弧度为单位的允许最终方向误差 0.35(20度)
+ free_goal_vel: False         #去除目标速度约束，使机器人能够以最大速度到达目标
+
+
+
+ # Obstacles
+
+ min_obstacle_dist: 0.03 #与障碍物的最小期望间隔（以米为单位） This value must also include our robot radius, since footprint_model is set to "point".
+ inflation_dist: 0.2 #0.6     #惩罚成本非零的障碍物周围的缓冲区
+ include_costmap_obstacles: True  #指定是否应考虑本地代价地图的障碍。标记为障碍物的每个单元格都被视为
+                                  #点障碍物。因此，不要选择非常小的成本图分辨率，因为它会增加计算时间。
+                                  #在未来的版本中，将解决这种情况，并为动态障碍提供额外的 API。
+ legacy_obstacle_association: False
+ costmap_obstacles_behind_robot_dist: 1 #1.5 #限制在规划机器人后方时考虑到的占用的局部代价地图障碍物
+                                        #（以米为单位指定距离）。
+ obstacle_poses_affected: 15      #每个障碍物位置都附加到轨迹上最近的姿势以保持距离。
+
+ dynamic_obstacle_inflation_dist: 0.6
+ include_dynamic_obstacles: False  #如果此参数设置为 true，则在优化过程中通过恒速模型预测和考虑 具有非零速度的障碍物的运动
+
+ costmap_converter_plugin: "costmap_converter::CostmapToPolygonsDBSMCCH"  #定义插件名称以便将成本图单元格转换为点/线/多边形。设置一个空字符串
+                               #以禁用转换，以便所有单元格都被视为点障碍。
+ costmap_converter/CostmapToPolygonsDBSMCCH:
+    cluster_max_distance: 0.4
+    cluster_min_pts: 2
+    cluster_max_pts: 30
+    convex_hull_min_pt_separation: 0.1
+ costmap_converter_spin_thread: True  #如果设置为 true，costmap 转换器将在不同的线程中调用其回调队列。
+ costmap_converter_rate: 5   #定义 costmap_converter 插件处理当前成本图的频率的速率（该值不应比成本图更新率高很多）[以赫兹为单位]。
+
+
+
+
+ # Optimization【优化参数配置】
+ no_inner_iterations: 3      #每次外循环迭代中调用的实际求解器迭代次数
+ no_outer_iterations: 2      #每次外循环迭代都会根据所需的时间分辨率dt_ref自动调整轨迹的大小，并调用内部优化器（执行no_inner_iterations）。
+                             #因此，每个规划周期中求解器迭代的总数是这两个值的乘积。
+ optimization_activate: True #参数弃用
+ optimization_verbose: False #参数弃用
+ penalty_epsilon: 0.05        #此项为速度等约束提供类似膨胀层的缓冲效果。接近限速将产生一定的惩罚值。
+ obstacle_cost_exponent: 1   #参数弃用
+ weight_max_vel_x: 1         #满足最大允许平移速度的优化权重
+#  weight_max_vel_y: 2         #
+ weight_max_vel_theta: 1     #满足最大允许角速度的优化权重
+ weight_acc_lim_x: 1         #满足最大允许平移加速度的优化权重
+ #weight_acc_lim_y: 1         #
+ weight_acc_lim_theta: 1     #满足最大允许角加速度的优化权重
+ weight_kinematics_nh: 1000 #1000     #满足非完整运动学的优化权重（该
+                             #参数必须很高，因为运动学方程构成等式约束，即使值为 1000 
+                             #也不意味着矩阵条件不好，因为与其他成本相比，“原始”成本值较小）
+ weight_kinematics_forward_drive: 1 #1  #强制机器人仅选择前向（正平移速度）的优化权重。较小的       #200
+                                     #重量（例如 1.0）仍然允许向后行驶。大约 1000 的值几
+                                     #乎可以防止向后行驶（但不能保证）。
+ weight_kinematics_turning_radius: 1 #1 #执行最小转弯半径的优化权重（仅适用于类车机器人）。          #50
+ weight_optimaltime: 1 #大幅提高weight_optimaltime（最优时间权重）。提高至3-5时，车辆在直道上快速加速，并靠近路径边缘沿切线过弯。
+ weight_shortest_path: 0  #参数弃用
+ weight_obstacle: 100 #50 #50   #与障碍物保持最小距离的优化权重
+ weight_inflation: 0.1 #通货膨胀惩罚的优化权重(该值应该很小)
+ weight_dynamic_obstacle: 50  #参数弃用
+ weight_dynamic_obstacle_inflation: 0.1  #参数弃用
+ weight_viapoint: 1 #1  #用于最小化到过孔点（resp. reference path）的距离的优化权重
+ weight_adapt_factor: 2 #一些特殊权重（当前为 weight_obstacle）在每个外部 TEB 迭代中重复按此因子缩放（weight_new = weight_old*factor）。
+                        #迭代地增加权重而不是先验地设置一个巨大的值会导致底层优化问题的更好的数值条件。
+
+
+
+ # Homotopy Class Planner
+ enable_homotopy_class_planning: True  #在不同的拓扑中激活并行规划（需要更多的 CPU 资源，因为同时优化了多个轨迹）
+ enable_multithreading: True   #激活多线程以在不同线程中规划每个轨迹
+ max_number_classes: 3   #指定考虑的不同轨迹的最大数量（限制计算量）
+ selection_cost_hysteresis: 1.0 #指定新候选者必须具有多少轨迹成本才能被选中
+ selection_prefer_initial_plan: 0.95 #参数弃用
+ selection_obst_cost_scale: 2.0  #仅用于选择“最佳”候选者的障碍成本项的额外缩放
+ selection_viapoint_cost_scale: 1.0
+ selection_alternative_time_cost: False #通过点成本项的额外缩放仅用于选择“最佳”候选者
+ 
+ roadmap_graph_no_samples: 15  #指定为创建路线图生成的样本数
+ roadmap_graph_area_width: 3   #随机关键点/路点在起点和目标之间的矩形区域中采样。以米为单位指定该区域的宽度。
+ roadmap_graph_area_length_scale: 1.0 #参数弃用
+ h_signature_prescaler: 1.0  #用于区分同伦类的尺度内部参数 ( H-signature )。警告：仅减小此参数，
+                             #如果您观察到局部成本地图中障碍物过多的问题，请不要将其选得太低，否则无法区分障碍物（0.2<值<=1）。
+ h_signature_threshold: 0.1  #如果实部和复部的差均低于指定阈值，则假定两个 H 签名相等。
+ obstacle_heading_threshold: 0.45 #指定障碍物航向和目标航向之间的标量积的值，以便将它们（障碍物）考虑在内进行探索。
+ switching_blocking_period: 0.0  #指定在允许切换到新的等价类之前需要过期的持续时间（以秒为单位）。
+ viapoints_all_candidates: True  #如果为真，则不同拓扑的所有轨迹都附加到一组通过点，否则只有与初始/全局计划共享相同
+                                 #拓扑的轨迹与它们连接（对test_optim_node没有影响）。
+ visualize_hc_graph: False   #可视化为探索独特轨迹而创建的图形（检查 rviz 中的标记消息）
+ visualize_with_time_as_z_axis_scale: False #参数弃用
+
+
+
+# Recovery
+ shrink_horizon_backup: True  #允许计划者在自动检测到问题（例如不可行性）的情况下暂时缩小范围（50%）。另见参数shrink_horizo​​n_min_duration。
+ shrink_horizon_min_duration: 10  #指定缩小地平线的最短持续时间，以防检测到不可行的轨迹
+ oscillation_recovery: True #参数弃用

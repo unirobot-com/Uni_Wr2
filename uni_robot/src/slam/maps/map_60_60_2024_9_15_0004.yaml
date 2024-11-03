@@ -1,0 +1,7 @@
+image: ./map_60_60_2024_9_15_0004.pgm
+resolution: 0.004000
+origin: [-2.000000, -2.000000, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

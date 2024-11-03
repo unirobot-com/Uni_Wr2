@@ -1,0 +1,4 @@
+<launch>
+    <!-- handle lidar slam test -->
+    <include file="$(find cartographer_ros)/launch/my_demo_revo_lds.launch" />
+</launch>

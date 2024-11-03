@@ -1,0 +1,5 @@
+GlobalPlanner:
+ allow_unknown: false
+ use_dijkstra: true
+ use_quadratic: true
+ 

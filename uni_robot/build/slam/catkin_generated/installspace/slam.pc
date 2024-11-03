@@ -1,0 +1,8 @@
+prefix=/home/unirobot/uni_robot/install
+
+Name: slam
+Description: Description of slam
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,59 @@
+TrajectoryPlannerROS:
+
+  #机器人配置参数
+  max_vel_x: 0.06              #允许的最大前进速度
+  min_vel_x: 0.03              #允许的最小前进速度
+  max_vel_theta: 0.16          #底座允许的最大旋转速度
+  min_vel_theta: -0.16         #底座允许的最小旋转速度
+  min_in_place_vel_theta: 0.1  #基座在原地旋转时允许的最小旋转速度
+
+  acc_lim_theta: 0.8           #机器人的旋转加速度限制
+  acc_lim_x: 1.5               #机器人的 x 加速度限制
+  acc_lim_y: 0                 #机器人的 y 加速度限制
+  # backup_vel: -0.1             #参数已弃用
+  escape_vel: -0.1             #逃跑时行驶的速度
+  holonomic_robot: false  #确定是否为完整或非完整机器人生成速度命令。对于完整机器人，可以向底座发出扫射速度命令。
+                          #对于非完整机器人，不会发出扫射速度命令,如果你将holonomic_robot设置为true，那么y_vels参数才会生效。
+                          #否则，对于非全向机器人，横向速度通常被禁用或忽略
+  y_vels: [[-0.3, -0.1, 0.1, 0.3]]  #完整机器人将考虑的扫射速度
+
+
+  #目标容差参数
+  yaw_goal_tolerance: 0.10
+  xy_goal_tolerance: 0.15
+  latch_xy_goal_tolerance: true #如果锁定了目标公差，机器人一旦到达目标 xy 位置，
+                                #它就会简单地在原地旋转，即使最终在旋转过程中超出了目标公差
+
+
+  #正向模拟参数
+  sim_timme: 3.0  #1.0   #向前模拟轨迹时间
+  sim_granularity: 0.025 #0.025  #指定轨迹上的各点之间的步长
+  angular_sim_granularity: 0.025  #在给定轨迹上的角度样本之间采用的步长
+  vx_samples: 3   #探索x速度空间时，使用的样本数量
+  vtheta_samples: 3  #20  #探索角度空间时，使用的样本数量
+  controller_frequency: 10 #此控制器的调用频率（单位为 Hz）。
+
+
+  #轨迹评分参数
+  meter_scoring: false  #gdist_scale和pdist_scale参数是否应假设goal_distance和path_distance以米或单元格为单位表示。默认情况下假设单元格
+  pdist_scale: 0.6  #控制器应保持接近给定路径的权重，最大可能值为 5.0
+  occdist_scale: 0.01  #控制器应尝试避开障碍物的权重
+  heading_lookahead: 0.325  #在对不同的原地旋转轨迹进行评分时，以米为单位向前看多远
+  heading_scoring: false  #是否根据机器人前往路径的速度或与路径的距离进行得分
+  heading_scoring_timestep: 0.8  #使用航向得分时，沿模拟轨迹向前看多远（以秒为单位）
+  dwa: false  #是否使用动态窗口方法 (DWA) 或是否使用轨迹推出（注意：根据我们的经验，DWA 的效果与轨迹推出一样好，并且计算成本更低。加速度限制极差的
+              #机器人可能会从运行轨迹推出中获益，但我们建议先尝试 DWA。）
+  publish_cost_grid_pc: false  #是否发布规划器在规划时将使用的成本网格。如果为 true，则sensor_msgs/PointCloud2将在~<name>/cost_cloud主题上可用。
+                               #每个点云代表成本网格，并且具有每个单独评分函数组件的字段以及每个单元的总体成本，同时考虑评分参数。
+
+  global_frame_id: map   #为cost_cloud设置的框架。应设置为与本地 costmap 的全局框架相同的框架
+  
+
+  #防震参数
+  oscillation_reset_dist: 0.01  #机器人必须行进多少米才能重置振荡标志
+  goal_distance_bias: 0.8  ###
+
+
+  ###
+  prune_plan: true   ##定义机器人沿路径移动时是否吃掉计划。如果设置为 true，则机器人越过这些点 1 米后，这些点将从计划末尾掉落。
+

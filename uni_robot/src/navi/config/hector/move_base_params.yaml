@@ -1,0 +1,101 @@
+shutdown_costmaps: false
+controller_frequency: 10.0 #1.0
+controller_patience: 3.0   #在空间清理操作执行前,控制器花多长时间等有效控制下发
+
+planner_patience: 5.0
+planner_patience: 5.0      #在空间清理操作执行前,留给规划器多长时间来找出一条有效规划.
+
+controller_patience: 15.0
+conservative_reset_dist: 3.0
+planner_frequency: 5.0 #1.0
+oscillation_timeout: 10.0
+oscillation_distance: 0.05 #0.2  #来回运动在多大距离以上不会被认为是振荡.
+
+
+# base_global_planner: "global_planner/GlobalPlanner"
+# base_local_planner: "dwa_local_planner/DWAPlannerROS"
+# max_planning_retries: 1
+
+rotate_recovery:
+  max_rotational_vel: 0.1  # 默认可能是1.0或更高，降低为0.5弧度/秒
+  acc_lim_th: 0.1
+
+recovery_behavior_enabled: true  #是否启动恢复机制
+clearing_rotation_allowed: false  #是否启动旋转的恢复，必须是recovery_behavior_enabled在使能的基础上才能生效
+
+recovery_behaviors:
+  - name: 'conservative_recovery'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+
+# #保守清除，用户指定区域之外的障碍物将从机器人地图中清除
+# conservative_reset:  
+#   reset_distance: 1.0  
+#   #layer_names: [static_layer, obstacle_layer, inflation_layer]
+#   layer_names: [obstacle_layer]  
+# #保守清除后，如果周围障碍物允许，机器人将进行原地旋转以清理空间
+
+# # #保守清除失败，积极清除，清除指定区域之外的所有障碍物，然后进行旋转
+# aggressive_reset:  
+#   reset_distance: 3.0  
+#   #layer_names: [static_layer, obstacle_layer, inflation_layer]
+#   layer_names: [obstacle_layer]
+# #积极清除也失败后，放弃规划路径
+
+# # # #可能是更进一步的清除，wiki未找到相关资料
+# super_reset:  
+#   reset_distance: 5.0  
+#   #layer_names: [static_layer, obstacle_layer, inflation_layer]
+#   layer_names: [obstacle_layer]
+
+# # #另一种恢复行为，需要注意该行为只能与具有动态设置速度限制功能的局部路径规划器适配，例如dwa
+# move_slow_and_clear:  
+#   clearing_distance: 0.5  #与小车距离0.5内的障碍物会被清除
+#   limited_trans_speed: 0.1  
+#   limited_rot_speed: 0.4
+#   limited_distance: 0.3
+
+
+# recovery_behaviors:  # 自恢复行为
+  # - name: 'conservative_reset'  
+  #   type: 'clear_costmap_recovery/ClearCostmapRecovery'  
+  # - name: 'aggressive_reset'
+  #  type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  # - name: 'super_reset'
+  #  type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  # - name: 'clearing_rotation'
+  #   type: 'rotate_recovery/RotateRecovery'  
+  # - name: 'move_slow_and_clear'
+  #   type: 'move_slow_and_clear/MoveSlowAndClear'
+
+
+# #保守清除，用户指定区域之外的障碍物将从机器人地图中清除
+# conservative_reset:  
+#   reset_distance: 1.0  
+#   #layer_names: [static_layer, obstacle_layer, inflation_layer]
+#   layer_names: [obstacle_layer]  
+# #保守清除后，如果周围障碍物允许，机器人将进行原地旋转以清理空间
+
+# # #保守清除失败，积极清除，清除指定区域之外的所有障碍物，然后进行旋转
+# aggressive_reset:  
+#   reset_distance: 3.0  
+#   #layer_names: [static_layer, obstacle_layer, inflation_layer]
+#   layer_names: [obstacle_layer]
+# #积极清除也失败后，放弃规划路径
+
+# # # #可能是更进一步的清除，wiki未找到相关资料
+# super_reset:  
+#   reset_distance: 5.0  
+#   #layer_names: [static_layer, obstacle_layer, inflation_layer]
+#   layer_names: [obstacle_layer]
+
+# # #另一种恢复行为，需要注意该行为只能与具有动态设置速度限制功能的局部路径规划器适配，例如dwa
+# move_slow_and_clear:  
+#   clearing_distance: 0.5  #与小车距离0.5内的障碍物会被清除
+#   limited_trans_speed: 0.1  
+#   limited_rot_speed: 0.4
+#   limited_distance: 0.3
+
+
+# recovery_behaviors:
+#   - name: 'stop_recovery_behavior'
+#     type: 'stop_recovery_behavior_plugin/StopRecoveryBehavior'

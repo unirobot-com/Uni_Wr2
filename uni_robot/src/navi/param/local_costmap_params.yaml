@@ -1,0 +1,47 @@
+# local_costmap:
+#   global_frame: odom
+#   robot_base_frame: base_link
+
+#   update_frequency:  3.0  #10.0
+#   publish_frequency: 3.0  #10.0
+#   transform_tolerance: 0.5
+
+#   # static_map: false  
+#   rolling_window: true
+#   width: 1.0  #3
+#   height: 1.0 #3
+#   resolution: 0.01 #0.05
+#   # plugins:
+#   #   - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+#   #   - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+  
+#   # obstacle_layer:
+#   #   observation_sources: scan
+#   #   scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+
+#   # inflation_layer:
+#   #   inflation_radius: 0.01
+#   #   cost_scaling_factor: 1.0
+
+
+local_costmap:
+  global_frame: odom
+  robot_base_frame: base_link  #base_footprint
+
+  update_frequency: 5.0 #15.0
+  publish_frequency: 5.0 #15.0
+  transform_tolerance: 0.6
+
+  static_map: false  
+  rolling_window: true
+  width: 5.0
+  height: 5.0
+  resolution: 0.004
+
+  inflation_layer:
+    inflation_radius: 0.01 # 你可以在这里设置膨胀半径
+
+  map_type: costmap
+  observation_sources: scan
+  scan: {sensor_frame: laser, data_type: LaserScan, topic: /scan_filtered, marking: true, clearing: true}
+

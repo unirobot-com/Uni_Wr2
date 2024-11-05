@@ -1,16 +1,16 @@
 # Uni_Wr2
-时间：2024.11.5
-作者：Unirobot
-简介：哈哈哈，让世界都开源吧！
-环境：
-  硬件：树霉派，编码电机*2，PC机(虚拟机ubuntu20.04)，路由器(局域网)
-  软件：【下位机：Ubuntu20.04，Ros-noetic】【上位机：虚拟机VMware，Ubuntu20.04,Ros-noetic】
-故事背景：我是unirobot第一款小车，名为Wr2，我会Gmapping-Hector-Cartographer导航哦，信我，不挂科。
+- 时间：2024.11.5
+- 作者：Unirobot
+- 简介：哈哈哈，让世界都开源吧！
+- 环境：
+  - 硬件：树霉派，编码电机*2，PC机(虚拟机ubuntu20.04)，路由器(局域网)
+  - 软件：【下位机：Ubuntu20.04，Ros-noetic】【上位机：虚拟机VMware，Ubuntu20.04,Ros-noetic】
+- 故事背景：我是unirobot第一款小车，名为Wr2，我会Gmapping-Hector-Cartographer导航哦，信我，不挂科。
 
 ## 文件结构
-catkin_ws: 小车底层代码(双轮差速小车，使用了PID调速)
-uni_robot: 上位机虚拟机导航相关代码(Gmapping,Hector,Cartographer)
-cartographer_ws：cartographer导航包(涵盖了Cartographer导航的算法，依赖包)/；
+- catkin_ws: 小车底层代码(双轮差速小车，使用了PID调速)
+- uni_robot: 上位机虚拟机导航相关代码(Gmapping,Hector,Cartographer)
+- cartographer_ws：cartographer导航包(涵盖了Cartographer导航的算法，依赖包)/；
 
 ## 下面就是我的学习指令了
 ===================================================================================

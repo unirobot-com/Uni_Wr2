@@ -1,0 +1,8 @@
+prefix=/home/uni/catkin_ws/devel
+
+Name: device
+Description: Description of device
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp rospy sensor_msgs std_msgs laser_filters

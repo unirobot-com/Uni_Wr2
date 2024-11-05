@@ -1,0 +1,12 @@
+<launch>
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find cartographer_ros)/configuration_files
+          -configuration_basename uni_localization.lua
+          -load_state_filename /home/unirobot/uni_robot/src/slam/bag/cartographer_teb_bag/data.bag.pbstream"
+      output="log">
+    <remap from="scan" to="/scan_filtered" />
+  </node>
+
+</launch>

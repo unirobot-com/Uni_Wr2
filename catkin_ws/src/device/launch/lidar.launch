@@ -1,0 +1,4 @@
+<!-- Single lidar Start -->
+<launch>
+    <include file="$(find ydlidar_ros_driver)/launch/X3.launch" />
+</launch>

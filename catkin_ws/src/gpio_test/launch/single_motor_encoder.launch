@@ -1,0 +1,4 @@
+<!-- single motor encoder -->
+<launch>
+    <node pkg="gpio_test" name="single_motor_encoder" type="encoder_motor_test.py" output="screen" />
+</launch>

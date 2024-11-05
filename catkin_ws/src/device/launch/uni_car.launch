@@ -1,0 +1,17 @@
+<launch>
+    <!-- Start the car with Double Wheel -->
+    <!-- <node pkg="device" name="uni_car" type="uni_car.py" output="screen" /> -->
+    <node pkg="device" name="uni_car" type="uni_car_new.py" output="screen" />
+    <!-- <node pkg="device" name="uni_car" type="uni_car_new_wheel.py" output="screen" /> -->
+
+    <!-- Lidar Start -->
+    <include file="$(find ydlidar_ros_driver)/launch/X3.launch" />
+    <!-- Cutting lidar data file -->
+    <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
+        <rosparam command="load" file="$(find device)/config/laser_actual.yaml" />
+    </node>
+    
+    <!-- load the urdf file of the car-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <param name="robot_description" textfile="$(find device)/urdf/uni_car_grey.urdf" />
+</launch>

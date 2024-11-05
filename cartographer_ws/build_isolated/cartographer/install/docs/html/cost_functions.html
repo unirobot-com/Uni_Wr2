@@ -1,0 +1,213 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cost functions &#8212; Cartographer  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Migration tool for pbstream files" href="pbstream_migration.html" />
+    <link rel="prev" title="Terminology" href="terminology.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pbstream_migration.html" title="Migration tool for pbstream files"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="terminology.html" title="Terminology"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartographer  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cost-functions">
+<h1>Cost functions<a class="headerlink" href="#cost-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="relative-transform-error-2d">
+<h2>Relative Transform Error 2D<a class="headerlink" href="#relative-transform-error-2d" title="Permalink to this headline">¶</a></h2>
+<p>Given two poses
+<span class="math notranslate nohighlight">\(\mathbf{p}_i = [\mathbf{x}_i; \theta_i] = [x_i, y_i, \theta_i]^T\)</span>
+and <span class="math notranslate nohighlight">\(\mathbf{p}_j = [\mathbf{x}_j; \theta_j] = [x_j, y_j, \theta_j]^T\)</span>
+the transformation <span class="math notranslate nohighlight">\(\mathbf T\)</span> from the coordinate frame <span class="math notranslate nohighlight">\(j\)</span> to the
+coordinate frame <span class="math notranslate nohighlight">\(i\)</span> has the following form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{T}( \mathbf{p}_i,\mathbf{p}_j) =
+\left[
+  \begin{array}{c}
+       R(\theta_i)^T (\mathbf x_j - \mathbf x_i) \\
+       \theta_j-\theta_i
+  \end{array}
+\right]\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(R(\theta_i)^T\)</span> is the rotation matrix of <span class="math notranslate nohighlight">\(\theta_i\)</span>.</p>
+<p>The weighted error <span class="math notranslate nohighlight">\(f:\mathbb R^6 \mapsto \mathbb R^3\)</span> between
+<span class="math notranslate nohighlight">\(\mathbf T\)</span> and the measured transformation <span class="math notranslate nohighlight">\(\mathbf T_{ij}^m =
+[\mathbf x_{ij}^m; \theta_j^m]\)</span> from the coordinate frame <span class="math notranslate nohighlight">\(j\)</span> to the
+coordinate frame <span class="math notranslate nohighlight">\(i\)</span> can be computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf f_{\text{relative}}( \mathbf{p}_i,\mathbf{p}_j) =
+\left[
+  w_{\text{t}} \; w_{\text{r}}
+\right]
+\left(
+  \mathbf T_{ij}^m - \mathbf T( \mathbf{p}_i,\mathbf{p}_j)
+\right) =
+\left[
+  \begin{array}{c}
+     w_{\text{t}}\left(
+       \mathbf x_{ij}^m - R(\theta_i)^T (\mathbf x_j - \mathbf x_i)
+     \right) \\
+     w_{\text{r}}\left(
+       \mathrm{clamp}(\theta_{ij}^m - (\theta_j-\theta_i))
+     \right)
+  \end{array}
+\right]\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_t\)</span> and <span class="math notranslate nohighlight">\(w_r\)</span> are weights for translation and rotation
+respectively and <span class="math notranslate nohighlight">\(\mathrm{clamp}: \mathbb R \mapsto [-\pi, \pi]\)</span>
+normalizes the angle difference.</p>
+<p>Jacobian matrix  <span class="math notranslate nohighlight">\(J_f\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+  J_f( \mathbf{p}_i,\mathbf{p}_j) &amp;=
+  \left[
+    \frac{\partial\mathbf f}{\partial x_i} \quad
+    \frac{\partial\mathbf f}{\partial y_i} \quad
+    \frac{\partial\mathbf f}{\partial \theta_i} \quad
+    \frac{\partial\mathbf f}{\partial x_j} \quad
+    \frac{\partial\mathbf f}{\partial y_j} \quad
+    \frac{\partial\mathbf f}{\partial \theta_j}
+  \right] \\
+  &amp;\mathstrut \\
+  &amp;=
+  \left[
+    \begin{array}{cccc}
+        w_{\text{t}} R^T(\theta_i)
+          &amp; -w_{\text{t}} {\frac{\mathrm d R^T(\theta_i)}{\mathrm d \theta}}(\mathbf x_j - \mathbf x_i)
+          &amp; -w_{\text{t}} R^T(\theta_i)
+          &amp; \mathbf{0} \\
+       \mathbf{0}^T
+        &amp; w_{\text{r}}
+        &amp; \mathbf{0}^T
+        &amp; -w_{\text{r}}
+    \end{array}
+  \right]
+\end{align}\end{split}\]</div>
+</div>
+<div class="section" id="landmark-cost-function">
+<h2>Landmark Cost Function<a class="headerlink" href="#landmark-cost-function" title="Permalink to this headline">¶</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf{p}_o\)</span> denote the global pose of the SLAM tracking frame at
+which a landmark with the global pose <span class="math notranslate nohighlight">\(\mathbf{p}_l\)</span> is observed.
+The landmark observation itself is the measured transformation
+<span class="math notranslate nohighlight">\(\mathbf{T}^m_{ol}\)</span> that was observed at time <span class="math notranslate nohighlight">\(t_o\)</span>.</p>
+<p>As the landmark can be observed asynchronously, the pose of observation
+<span class="math notranslate nohighlight">\(\mathbf{p}_o\)</span> is modeled in between two regular, consecutive trajectory
+nodes <span class="math notranslate nohighlight">\(\mathbf{p}_i, \mathbf{p}_j\)</span>.
+It is interpolated between <span class="math notranslate nohighlight">\(\mathbf{p}_i\)</span> and
+<span class="math notranslate nohighlight">\(\mathbf{p}_j\)</span> at the observation time <span class="math notranslate nohighlight">\(t_o\)</span> using a linear
+interpolation for the translation and a quaternion SLERP for the rotation:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{p}_o = \text{interpolate}(\mathbf{p}_i, \mathbf{p}_j, t_o)\]</div>
+<p>Then, the full weighted landmark cost function can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+  \mathbf f_{\text{landmark}}(\mathbf{p}_l, \mathbf{p}_i, \mathbf{p}_j) &amp;=
+    \mathbf f_{\text{relative}}(\mathbf{p}_l, \mathbf{p}_o) \\
+  &amp;=
+  \left[
+    w_{\text{t}} \; w_{\text{r}}
+  \right]
+  \left(
+    \mathbf T_{ol}^m - \mathbf T( \mathbf{p}_o,\mathbf{p}_l)
+  \right)
+\end{align}\end{split}\]</div>
+<p>The translation and rotation weights <span class="math notranslate nohighlight">\(w_{\text{t}}, w_{\text{r}}\)</span> are
+part of the landmark observation data that is fed into Cartographer.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cost functions</a><ul>
+<li><a class="reference internal" href="#relative-transform-error-2d">Relative Transform Error 2D</a></li>
+<li><a class="reference internal" href="#landmark-cost-function">Landmark Cost Function</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="terminology.html"
+                        title="previous chapter">Terminology</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pbstream_migration.html"
+                        title="next chapter">Migration tool for pbstream files</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cost_functions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="pbstream_migration.html" title="Migration tool for pbstream files"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="terminology.html" title="Terminology"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cartographer  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024 The Cartographer Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

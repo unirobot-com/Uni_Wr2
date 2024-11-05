@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcartographer_test_library.a  CMakeFiles/cartographer_test_library.dir/cartographer/io/fake_file_writer.cc.o CMakeFiles/cartographer_test_library.dir/cartographer/io/fake_file_writer_test.cc.o CMakeFiles/cartographer_test_library.dir/cartographer/io/internal/testing/test_helpers.cc.o CMakeFiles/cartographer_test_library.dir/cartographer/mapping/internal/testing/test_helpers.cc.o
+/usr/bin/ranlib libcartographer_test_library.a

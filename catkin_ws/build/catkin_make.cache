@@ -1,0 +1,2 @@
+device:gpio_test
+-DCATKIN_DEVEL_PREFIX=/home/uni/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/uni/catkin_ws/install -G Unix Makefiles

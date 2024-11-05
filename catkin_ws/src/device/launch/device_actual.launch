@@ -1,0 +1,29 @@
+<launch>
+    <!-- uni car left and right wheel start -->
+    <node pkg="device" name="uni_motor_l" type="uni_motor_l.py" output="screen" />
+    <node pkg="device" name="uni_motor_r" type="uni_motor_r.py" output="screen" />
+    
+    <!-- uni car control start -->
+    <!-- <node pkg="device" name="uni_motor_control" type="uni_motor_control.py" output="screen" /> -->
+    <!-- <node pkg="device" name="uni_motor_controls" type="uni_motor_control_actual.py" output="screen" /> -->
+    <node pkg="device" name="uni_motor_controls" type="uni_motor_control_actual_new.py" output="screen" />
+
+    <!-- lidar start -->
+    <include file="$(find ydlidar_ros_driver)/launch/X3.launch" />
+    <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
+        <rosparam command="load" file="$(find device)/config/laser_actual.yaml" />
+    </node>
+    
+    <!-- load urdf -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <param name="robot_description" textfile="$(find device)/urdf/uni_car_actual.urdf" />
+
+  <!-- 发布 base_link 到 laser_frame 的静态变换 -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_pub_base_laser"
+        args="0 0 0.15 0 0 0 base_link laser 100" /> -->
+
+  <!-- 如果没有里程计，发布 odom 到 base_link 的静态变换 -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_pub_odom_base"
+        args="0 0 0 0 0 0 odom base_link 100" /> -->
+</launch>
+

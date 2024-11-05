@@ -1,0 +1,13 @@
+<launch>
+  <arg name="urdf_filename" default="$(find cartographer_ros)/urdf/uni_car_actual.urdf"/>
+
+  <node name="cartographer_assets_writer" pkg="cartographer_ros" required="true"
+      type="cartographer_assets_writer" args="
+          -configuration_directory $(find cartographer_ros)/configuration_files
+          -configuration_basename uni_carto_miniasset.lua
+          -urdf_filename $(arg urdf_filename)
+          -bag_filenames /home/unirobot/uni_robot/src/slam/bag/data.bag
+          -pose_graph_filename /home/unirobot/uni_robot/src/slam/bag/data.bag.pbstream"
+      output="screen">
+  </node>
+</launch>

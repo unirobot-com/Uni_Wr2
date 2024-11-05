@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/unirobot/cartographer_ws/install_isolated/setup.sh

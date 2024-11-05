@@ -1,0 +1,8 @@
+prefix=/home/unirobot/cartographer_ws/install_isolated
+
+Name: cartographer_rviz
+Description: Description of cartographer_rviz
+Version: 1.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime cartographer_ros cartographer_ros_msgs message_runtime roscpp roslib rviz

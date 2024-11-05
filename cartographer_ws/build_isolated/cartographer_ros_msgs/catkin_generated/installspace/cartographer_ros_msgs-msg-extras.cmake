@@ -1,0 +1,2 @@
+set(cartographer_ros_msgs_MESSAGE_FILES "msg/BagfileProgress.msg;msg/HistogramBucket.msg;msg/LandmarkEntry.msg;msg/LandmarkList.msg;msg/MetricFamily.msg;msg/MetricLabel.msg;msg/Metric.msg;msg/StatusCode.msg;msg/StatusResponse.msg;msg/SubmapEntry.msg;msg/SubmapList.msg;msg/SubmapTexture.msg;msg/TrajectoryStates.msg")
+set(cartographer_ros_msgs_SERVICE_FILES "srv/FinishTrajectory.srv;srv/GetTrajectoryStates.srv;srv/ReadMetrics.srv;srv/StartTrajectory.srv;srv/SubmapQuery.srv;srv/TrajectoryQuery.srv;srv/WriteState.srv")

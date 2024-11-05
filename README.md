@@ -1,6 +1,19 @@
 # Uni_Wr2
-When the little potatoes arrive, all move away, Ha ha ha.
-===============================================================
+时间：2024.11.5
+作者：Unirobot
+简介：哈哈哈，让世界都开源吧！
+环境：
+  硬件：树霉派，编码电机*2，PC机(虚拟机ubuntu20.04)，路由器(局域网)
+  软件：【下位机：Ubuntu20.04，Ros-noetic】【上位机：虚拟机VMware，Ubuntu20.04,Ros-noetic】
+故事背景：我是unirobot第一款小车，名为Wr2，我会Gmapping-Hector-Cartographer导航哦，信我，不挂科。
+
+## 文件结构
+catkin_ws: 小车底层代码(双轮差速小车，使用了PID调速)
+uni_robot: 上位机虚拟机导航相关代码(Gmapping,Hector,Cartographer)
+cartographer_ws：cartographer导航包(涵盖了Cartographer导航的算法，依赖包)/；
+
+## 下面就是我的学习指令了
+===================================================================================
 ## 【Gmapping Slam】2D激光雷达导航. 60*60厘米小场地 ---局部路径规划器 dwa 2024年-09月-25日
   ### 地图构建测试 注意：gmapping建图需要小车速度慢一点
   1. 远程启动底层驱动 `roslaunch device uni_car.launch `
@@ -14,7 +27,7 @@ When the little potatoes arrive, all move away, Ha ha ha.
   2. 启动导航 `roslaunch navi uni_car_navigation_gmapping.launch `
 
 
-===============================================================
+=================================================================================
 ## 【Hector Slam】2D激光雷达导航. 60*60厘米小场地 ---局部路径规划器 dwa 2024年-09月-22日
   ### 地图构建测试 注意：hector建图需要小车速度慢一点
   1. 远程启动底层驱动 `roslaunch device device_actual.launch `
@@ -29,7 +42,7 @@ When the little potatoes arrive, all move away, Ha ha ha.
 
 
 
-===============================================================
+=================================================================================
 ## 【Cartographer】2D激光雷达导航. 60*60厘米小场地 ---局部路径规划器 dwa 2024年-09月-22日
   ### 地图构建测试
   1. 远程启动底层驱动 `roslaunch device device.launch `
@@ -45,3 +58,8 @@ When the little potatoes arrive, all move away, Ha ha ha.
  ### 导航测试
   1. 远程启动底层驱动 `roslaunch device device_actual.launch `
   2. 启动导航 `roslaunch navi uni_car_navigation_cartographer.launch `
+
+
+## 既然都看到这里了，再看看下面的内容又如何，哈哈哈
+Uni小车介绍bilibili：https://www.bilibili.com/video/BV1NfDHY6ED8/?spm_id_from=333.337.search-card.all.click&vd_source=89624656ad0eb6477d8606070fc1e081
+某宝：https://4vhhasmxqjt25cg7za43qs6podckjow.taobao.com/

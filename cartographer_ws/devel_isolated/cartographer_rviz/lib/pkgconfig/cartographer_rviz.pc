@@ -1,8 +1,0 @@
-prefix=/home/unirobot/cartographer_ws/devel_isolated/cartographer_rviz
-
-Name: cartographer_rviz
-Description: Description of cartographer_rviz
-Version: 1.0.0
-Cflags: -I/home/unirobot/cartographer_ws/src/cartographer_ros/cartographer_rviz/.
-Libs: -L${prefix}/lib 
-Requires: message_runtime cartographer_ros cartographer_ros_msgs message_runtime roscpp roslib rviz

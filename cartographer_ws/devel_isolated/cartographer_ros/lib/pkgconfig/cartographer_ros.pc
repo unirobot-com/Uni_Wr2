@@ -1,8 +1,0 @@
-prefix=/home/unirobot/cartographer_ws/devel_isolated/cartographer_ros
-
-Name: cartographer_ros
-Description: Description of cartographer_ros
-Version: 1.0.0
-Cflags: -I/home/unirobot/cartographer_ws/src/cartographer_ros/cartographer_ros/. -I/usr/include/pcl-1.10 -I/usr/include/eigen3 -I/usr/include
-Libs: -L${prefix}/lib -lcartographer_ros /usr/lib/x86_64-linux-gnu/libpcl_common.so /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_filesystem.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so /usr/lib/x86_64-linux-gnu/libboost_iostreams.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_regex.so
-Requires: cartographer_ros_msgs geometry_msgs message_runtime nav_msgs pcl_conversions rosbag roscpp roslib sensor_msgs std_msgs tf2 tf2_eigen tf2_ros urdf visualization_msgs

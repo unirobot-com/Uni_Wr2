@@ -1,8 +1,0 @@
-prefix=/home/unirobot/cartographer_ws/install_isolated
-
-Name: cartographer_ros_msgs
-Description: Description of cartographer_ros_msgs
-Version: 1.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: geometry_msgs std_msgs message_runtime

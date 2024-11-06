@@ -9,10 +9,10 @@
 
 ## 文件结构
 - HardWare: PCB原理图
+- 3D_Shell： 添加了3D打印文件地址
 - catkin_ws: 小车底层代码(双轮差速小车，使用了PID调速)
 - uni_robot: 上位机虚拟机导航相关代码(Gmapping,Hector,Cartographer)
 - cartographer_ws：cartographer导航包(涵盖了Cartographer导航的算法，依赖包)
-
 ## 下面就是我的小车的学习指令了
 ===================================================================================
 ## 【Gmapping Slam】2D激光雷达导航. 60*60厘米小场地 ---局部路径规划器 dwa 2024年-09月-25日
